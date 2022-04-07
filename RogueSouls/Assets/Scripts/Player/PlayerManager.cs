@@ -11,8 +11,8 @@ public class PlayerManager : MonoBehaviour
 
     float delta;
 
-    public void Start(){
-
+    public void Start()
+    {
         inputManager = GetComponent<InputManager>();
         cameraHandler = FindObjectOfType<CameraHandler>();
         playerLocomotion = GetComponent<PlayerLocomotion>();
@@ -33,6 +33,6 @@ public class PlayerManager : MonoBehaviour
 
     private void LateUpdate() 
     {
-        cameraHandler.FollowTarget();
+        cameraHandler.HandleAllCameraMovement();
     }
 }
