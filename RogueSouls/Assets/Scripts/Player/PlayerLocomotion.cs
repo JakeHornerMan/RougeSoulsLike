@@ -10,9 +10,15 @@ public class PlayerLocomotion : MonoBehaviour
     Transform cameraObject;
     Rigidbody playerRigidbody;
 
+    public bool isSprinting;
+
     [Header("Movement Stats")]
     [SerializeField]
+    public float walkingSpeed = 2;
+    [SerializeField]
     public float movementSpeed = 5;
+    [SerializeField]
+    public float sprintingSpeed = 8;
     [SerializeField]
     public float rotationSpeed = 10;
     
@@ -37,7 +43,18 @@ public class PlayerLocomotion : MonoBehaviour
         moveDirection.Normalize();
         moveDirection.y = 0;
 
-        moveDirection = moveDirection * movementSpeed;
+        if(isSprinting){
+            moveDirection = moveDirection * sprintingSpeed;
+        }
+        else{
+            if(inputManager.moveAmount >= 0.5f){
+            moveDirection = moveDirection * movementSpeed;
+            }
+            else{
+                moveDirection = moveDirection * walkingSpeed;
+            }
+        }
+        
         
         Vector3 movementVelocity = moveDirection;
         playerRigidbody.velocity = movementVelocity;

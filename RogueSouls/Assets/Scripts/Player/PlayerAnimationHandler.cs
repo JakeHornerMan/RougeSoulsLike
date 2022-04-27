@@ -15,7 +15,7 @@ public class PlayerAnimationHandler : MonoBehaviour
         vertical = Animator.StringToHash("Vertical");   
     }
 
-    public void UpdateAnimatorValues(float verticalInput, float horizontalInput)
+    public void UpdateAnimatorValues(float verticalInput, float horizontalInput, bool isSprinting)
     {
         //animation setting to distinct values
         float v= 0;
@@ -50,6 +50,11 @@ public class PlayerAnimationHandler : MonoBehaviour
         }
         else{
             h = 0; 
+        }
+
+        if(isSprinting){
+            h = horizontalInput;
+            v =2;
         }
 
         animator.SetFloat(vertical, v, 0.1f, Time.deltaTime);
