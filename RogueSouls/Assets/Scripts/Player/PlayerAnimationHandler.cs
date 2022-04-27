@@ -60,4 +60,10 @@ public class PlayerAnimationHandler : MonoBehaviour
         animator.SetFloat(vertical, v, 0.1f, Time.deltaTime);
         animator.SetFloat(horizontal, h, 0.1f, Time.deltaTime);
     }
+
+    public void PlayTargetAnimation(string targetAnimation, bool isInteracting)
+    {
+        animator.SetBool("isInteracting", isInteracting);
+        animator.CrossFade(targetAnimation,0.2f);
+    }
 }
