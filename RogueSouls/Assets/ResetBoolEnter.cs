@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ResetBool : StateMachineBehaviour
+public class ResetBoolEnter : StateMachineBehaviour
 {
     public string Bool;
     public bool Status;

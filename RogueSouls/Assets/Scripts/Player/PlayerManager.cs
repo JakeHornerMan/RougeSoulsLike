@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
 {
-    Animator animator;
     InputManager inputManager;
     CameraHandler cameraHandler;
     PlayerLocomotion playerLocomotion;
@@ -16,7 +15,7 @@ public class PlayerManager : MonoBehaviour
 
     public void Start()
     {
-        animator = GetComponentInChildren<Animator>();
+        //animator = GetComponentInChildren<Animator>();
         inputManager = GetComponent<InputManager>();
         cameraHandler = FindObjectOfType<CameraHandler>();
         playerLocomotion = GetComponent<PlayerLocomotion>();
@@ -39,6 +38,8 @@ public class PlayerManager : MonoBehaviour
     {
         cameraHandler.HandleAllCameraMovement();
 
-        isInteracting = animator.GetBool("isInteracting");
+        isInteracting = playerAnimationHandler.animator.GetBool("isInteracting");
+        playerLocomotion.isJumping = playerAnimationHandler.animator.GetBool("isJumping");
+        playerAnimationHandler.animator.SetBool("isGrounded", playerLocomotion.isGrounded);
     }
 }

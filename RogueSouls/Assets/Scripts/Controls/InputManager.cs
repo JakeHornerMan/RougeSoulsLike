@@ -19,6 +19,8 @@ public class InputManager : MonoBehaviour
 
     public bool b_input;
 
+    public bool jump_input;
+
     private void Awake(){
         playerAnimationHandler = GetComponent<PlayerAnimationHandler>();
         playerLocomotion = GetComponent<PlayerLocomotion>();
@@ -28,6 +30,7 @@ public class InputManager : MonoBehaviour
     {
         HandleMovementInput();
         HandleSprintingInput();
+        HandleJumpingInput();
     }
 
     private void OnEnable()
@@ -40,6 +43,8 @@ public class InputManager : MonoBehaviour
 
             playerControls.PlayerActions.B.performed += i => b_input = true;
             playerControls.PlayerActions.B.canceled += i => b_input = false;
+
+            playerControls.PlayerActions.Jump.performed += i => jump_input = true;
         }
 
         playerControls.Enable();
@@ -66,6 +71,14 @@ public class InputManager : MonoBehaviour
         }
         else{
             playerLocomotion.isSprinting = false;
+        }
+    }
+
+    private void HandleJumpingInput()
+    {
+        if(jump_input){
+            jump_input = false;
+            playerLocomotion.HandleJump();
         }
     }
 }
