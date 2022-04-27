@@ -39,6 +39,6 @@ public class PlayerManager : MonoBehaviour
     {
         cameraHandler.HandleAllCameraMovement();
 
-        //isInteracting = 
+        isInteracting = animator.GetBool("isInteracting");
     }
 }

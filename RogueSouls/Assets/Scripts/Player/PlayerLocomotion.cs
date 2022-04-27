@@ -13,9 +13,11 @@ public class PlayerLocomotion : MonoBehaviour
     Rigidbody playerRigidbody;
 
 
-
+    [Header("Movement Flags")]
     public bool isSprinting;
     public bool isGrounded;
+
+    public bool isLanding = false;
 
     [Header("Movement Stats")]
     [SerializeField]
@@ -116,9 +118,9 @@ public class PlayerLocomotion : MonoBehaviour
             playerRigidbody.AddForce(-Vector3.up * fallingVelocity * inAirTimer);
         }
 
-        if(Physics.SphereCast(rayCastOrigin, raycastLength, -Vector3.up, out hit, raycastLength, groundLayer)){
-
+        if(Physics.SphereCast(rayCastOrigin, raycastLength, -Vector3.up, out hit, groundLayer)){
             if(!isGrounded && !playerManager.isInteracting){
+                isLanding = true;
                 animationHandler.PlayTargetAnimation("Landing", true);
             }
             inAirTimer = 0;
