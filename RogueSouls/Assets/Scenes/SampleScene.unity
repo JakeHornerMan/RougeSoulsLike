@@ -1257,7 +1257,7 @@ MonoBehaviour:
   jumpHeight: 5
   inAirTimer: 0
   leapingVelocity: 3
-  fallingVelocity: 33
+  fallingVelocity: 66
   raycastLength: 0.15
   rayCastHeightOffset: 0.25
   groundLayer:

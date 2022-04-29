@@ -147,11 +147,12 @@ public class PlayerLocomotion : MonoBehaviour
         StartCoroutine(coroutine);
     }
     private IEnumerator HandleJumping(float waitTime){
+        
         if(isGrounded){
             animationHandler.animator.SetBool("isJumping",true);
             animationHandler.PlayTargetAnimation("Jumping", false);
 
-            float jumpingVelocity = Mathf.Sqrt(-2 * gravityIntensity * jumpHeight);
+            float jumpingVelocity = Mathf.Sqrt(-1 * gravityIntensity * jumpHeight);
             Vector3 playerVelocity = moveDirection;
             playerVelocity.y = jumpingVelocity;
 
