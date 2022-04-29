@@ -1175,6 +1175,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e713c1a84bfa8724bbd7dbb1ccdbd7df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animator: {fileID: 0}
 --- !u!1 &4056710954491409506
 GameObject:
   m_ObjectHideFlags: 0
@@ -1232,6 +1233,7 @@ MonoBehaviour:
   horizontalInput: 0
   moveAmount: 0
   b_input: 0
+  jump_input: 0
 --- !u!114 &4056710954491409509
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1246,10 +1248,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isSprinting: 0
   isGrounded: 1
+  isJumping: 0
   walkingSpeed: 2
   movementSpeed: 5
   sprintingSpeed: 8
   rotationSpeed: 10
+  gravityIntensity: -15
+  jumpHeight: 5
   inAirTimer: 0
   leapingVelocity: 3
   fallingVelocity: 33
