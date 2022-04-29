@@ -118,9 +118,7 @@ public class PlayerLocomotion : MonoBehaviour
     {
         RaycastHit hit;
         Vector3 rayCastOrigin = transform.position; 
-        Vector3 targetPosition;
         rayCastOrigin.y = rayCastOrigin.y + rayCastHeightOffset;
-        targetPosition = transform.position;
 
         if(!isGrounded && !isJumping){
             if(!playerManager.isInteracting){
@@ -136,30 +134,19 @@ public class PlayerLocomotion : MonoBehaviour
             if(!isGrounded && !playerManager.isInteracting){
                 animationHandler.PlayTargetAnimation("Landing", true);
             }
-            Vector3 rayCastHitPoint = hit.point;
-            targetPosition.y = rayCastHitPoint.y;
             inAirTimer = 0;
             isGrounded = true;
         }
         else{
             isGrounded = false;
         }
-
-        if(isGrounded && !isJumping){
-            if(playerManager.isInteracting || inputManager.moveAmount > 0){
-                transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime / 0.1f);
-            }
-            else{
-                transform.position = targetPosition;
-            }
-        }
     }
 
-    // public void HandleJump(){
-    //     coroutine = HandleJumping(0.2f);
-    //     StartCoroutine(coroutine);
-    // }
-    public /*IEnumerator*/ void HandleJump(){
+    public void HandleJump(){
+        coroutine = HandleJumping(0.2f);
+        StartCoroutine(coroutine);
+    }
+    private IEnumerator HandleJumping(float waitTime){
         
         if(isGrounded){
             animationHandler.animator.SetBool("isJumping",true);
@@ -169,7 +156,7 @@ public class PlayerLocomotion : MonoBehaviour
             Vector3 playerVelocity = moveDirection;
             playerVelocity.y = jumpingVelocity;
 
-            //yield return new WaitForSeconds(waitTime);
+            yield return new WaitForSeconds(waitTime);
 
             playerRigidbody.velocity = playerVelocity;
         }
