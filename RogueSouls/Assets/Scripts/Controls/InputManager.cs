@@ -62,12 +62,12 @@ public class InputManager : MonoBehaviour
         horizontalInput = movementInput.x;
         moveAmount = Mathf.Clamp01(Mathf.Abs(horizontalInput) + Mathf.Abs(verticalInput));
         
-        if(playerMovement.isGrounded){
+        // if(playerMovement.isGrounded){
             playerAnimationHandler.UpdateAnimatorValues(0, moveAmount, playerMovement.isSprinting);
-        }
-        else{
-            playerAnimationHandler.UpdateAnimatorValues(0, 0, false);
-        }
+        // }
+        // else{
+        //     playerAnimationHandler.UpdateAnimatorValues(0, 0, false);
+        // }
 
         cameraInputX = cameraInput.x;
         cameraInputY = cameraInput.y;
@@ -86,8 +86,8 @@ public class InputManager : MonoBehaviour
     {
         if(jump_input){
             jump_input = false;
+            //playerMovement.isJumping = true;
             playerMovement.Jump();
-            playerAnimationHandler.SetBoolField("isJumping",true);
         }
     }
 }

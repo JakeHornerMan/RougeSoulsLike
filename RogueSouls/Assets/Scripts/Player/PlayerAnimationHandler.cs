@@ -70,4 +70,10 @@ public class PlayerAnimationHandler : MonoBehaviour
     public void SetBoolField(string field, bool ans){
         animator.SetBool(field, ans);
     }
+
+    public void JumpAnim(){
+        animator.SetBool("isJumping", true);
+        PlayTargetAnimation("Jumping", false);
+    }
+    
 }
