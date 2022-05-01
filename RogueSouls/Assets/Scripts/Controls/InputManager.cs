@@ -6,6 +6,7 @@ public class InputManager : MonoBehaviour
 {
     PlayerControls playerControls;
     PlayerLocomotion playerLocomotion;
+    PlayerMovement playerMovement;
     PlayerAnimationHandler playerAnimationHandler;
     public Vector2 movementInput;
     public Vector2 cameraInput;
@@ -23,6 +24,7 @@ public class InputManager : MonoBehaviour
 
     private void Awake(){
         playerAnimationHandler = GetComponent<PlayerAnimationHandler>();
+        playerMovement = GetComponent<PlayerMovement>();
         playerLocomotion = GetComponent<PlayerLocomotion>();
     }
 
@@ -59,7 +61,13 @@ public class InputManager : MonoBehaviour
         verticalInput = movementInput.y;
         horizontalInput = movementInput.x;
         moveAmount = Mathf.Clamp01(Mathf.Abs(horizontalInput) + Mathf.Abs(verticalInput));
-        playerAnimationHandler.UpdateAnimatorValues(0, moveAmount, playerLocomotion.isSprinting);
+        
+        if(playerMovement.isGrounded){
+            playerAnimationHandler.UpdateAnimatorValues(0, moveAmount, playerMovement.isSprinting);
+        }
+        else{
+            playerAnimationHandler.UpdateAnimatorValues(0, 0, false);
+        }
 
         cameraInputX = cameraInput.x;
         cameraInputY = cameraInput.y;
@@ -67,10 +75,10 @@ public class InputManager : MonoBehaviour
 
     private void HandleSprintingInput(){
         if (b_input && moveAmount > 0.5f){
-            playerLocomotion.isSprinting = true;
+            playerMovement.isSprinting = true;
         }
         else{
-            playerLocomotion.isSprinting = false;
+            playerMovement.isSprinting = false;
         }
     }
 
@@ -78,7 +86,8 @@ public class InputManager : MonoBehaviour
     {
         if(jump_input){
             jump_input = false;
-            playerLocomotion.HandleJump();
+            playerMovement.Jump();
+            playerAnimationHandler.SetBoolField("isJumping",true);
         }
     }
 }

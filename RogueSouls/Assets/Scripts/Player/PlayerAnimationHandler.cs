@@ -66,4 +66,8 @@ public class PlayerAnimationHandler : MonoBehaviour
         animator.SetBool("isInteracting", isInteracting);
         animator.CrossFade(targetAnimation,0.2f);
     }
+
+    public void SetBoolField(string field, bool ans){
+        animator.SetBool(field, ans);
+    }
 }
