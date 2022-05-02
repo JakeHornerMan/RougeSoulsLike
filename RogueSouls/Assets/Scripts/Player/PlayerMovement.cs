@@ -14,10 +14,12 @@ public class PlayerMovement : MonoBehaviour
     Vector3 moveDirection;
 
     [Header("Movement Flags")]
-    public bool DissableMove = true;
+    public bool isInteracting;
+    public bool DissableMove = false;
     public bool isSprinting;
     public bool isGrounded;
     public bool isJumping;
+    public bool isDodging;
 
     [Header("Movement Stats")]
     [SerializeField]
@@ -32,6 +34,12 @@ public class PlayerMovement : MonoBehaviour
     [Header("Jump Stats")]
     public float gravityIntensity = -15;
     public float jumpHeight = 3;
+
+    [Header("Dodge Stats")]
+    public int rollVelocity = 7;
+    public int stepVelocity = 5;
+    public float delayBeforeInvinsible;
+    public float invincibleDuration;
 
     [Header("Gizmo Debug")]
     public float rayCastHeightOffset = 0.25f;
@@ -48,20 +56,23 @@ public class PlayerMovement : MonoBehaviour
 
     public void HandlePlayerMovement(Vector2 movementInput)
     {
-        // if(isJumping && isGrounded){
-        //     Jump();
-        // }
 
-        //IsGrounded();
         if(!DissableMove){
             if(isGrounded){
                 Rotation(movementInput);
                 Move(movementInput);
+                RollingAndBackstep(movementInput);
             }
-        }  
+        }
+
+        // if(!isGrounded && !isJumping){
+        //     Falling();
+        // }   
     }
 
     public void Move(Vector2 movementInput){
+
+        if(isInteracting){return;}
 
         Vector2 input = new Vector2(movementInput.x, movementInput.y);
         Vector2 inputDirirection = input.normalized;
@@ -91,6 +102,8 @@ public class PlayerMovement : MonoBehaviour
     }
 
     public void Rotation(Vector2 movementInput){
+
+        if(isInteracting){return;}
         
         Vector2 input = new Vector2(movementInput.x, movementInput.y);
         Vector2 inputDirirection = input.normalized;
@@ -116,7 +129,51 @@ public class PlayerMovement : MonoBehaviour
 
         DisableMovement(.2f);
 
-        playerRigidbody.velocity = playerVelocity;
+        playerRigidbody.velocity = playerVelocity * 0.9f;
+        
+    }
+
+    // public void JumpMove(Vector2 movementInput){
+        
+    //     Vector2 input = new Vector2(movementInput.x, movementInput.y);
+    //     Vector2 inputDirirection = input.normalized;
+
+    //     moveDirection = cameraTransform.forward * inputDirirection.y;
+    //     moveDirection = moveDirection + cameraTransform.right * inputDirirection.x;
+    //     moveDirection.Normalize();
+    //     moveDirection = moveDirection * .5f;
+
+    //     Vector3 movementVelocity = moveDirection;
+    //     playerRigidbody.velocity = movementVelocity;
+    // }
+
+    // public void Falling(){
+    //     if(playerRigidbody.velocity.y<0){
+    //         isJumping = true;
+    //         playerAnimationHandler.PlayTargetAnimation("Falling", false);
+    //         playerRigidbody.velocity += Vector3.up * (5.0f - 1) * Time.deltaTime;
+    //     }
+    // }
+
+    public void RollingAndBackstep(Vector2 movementInput){
+        if(isInteracting){
+            return;
+        }
+
+        if(isDodging){
+
+            if(inputManager.moveAmount > 0){
+                playerAnimationHandler.PlayTargetAnimation("Dodge Roll", true);
+                
+                WaitForMove(0.2f, rollVelocity, true);
+            }
+            else{
+                playerAnimationHandler.PlayTargetAnimation("Dodge Step", true);
+
+                WaitForMove(0.2f, stepVelocity, false);
+            }
+        }
+        isDodging = false;
     }
 
     void OnCollisionEnter(Collision collision)
@@ -126,7 +183,6 @@ public class PlayerMovement : MonoBehaviour
             isGrounded = true;
             isJumping = false;
             DisableMovement(.5f);
-            //playerAnimationHandler.SetBoolField("isInteracting", true);
         }
     }
 
@@ -155,5 +211,24 @@ public class PlayerMovement : MonoBehaviour
         DissableMove = true;
         yield return new WaitForSeconds(time);
         DissableMove = false;
+    }
+
+    public void WaitForMove(float time, int moveVelocity, bool forwards){
+        coroutine = WaitThenMove(time,moveVelocity,forwards);
+        StartCoroutine(coroutine);
+    }
+
+    private IEnumerator WaitThenMove(float time, int moveVelocity, bool forwards){
+        yield return new WaitForSeconds(time);
+
+        Vector3 playerVelocity;
+        if(forwards == true){
+            playerVelocity = (transform.forward * moveVelocity);
+        }
+        else{
+            playerVelocity = (-transform.forward * moveVelocity);
+        }
+        
+        playerRigidbody.velocity = playerVelocity;
     }
 }

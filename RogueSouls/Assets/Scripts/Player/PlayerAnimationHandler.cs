@@ -4,12 +4,14 @@ using UnityEngine;
 
 public class PlayerAnimationHandler : MonoBehaviour
 {
+    PlayerMovement playerMovement;
     public Animator animator;
     int horizontal;
     int vertical;
 
     public void Start()
     {
+        playerMovement = GetComponent<PlayerMovement>();
         animator = GetComponentInChildren<Animator>();
         horizontal = Animator.StringToHash("Horizontal");
         vertical = Animator.StringToHash("Vertical");   
@@ -63,6 +65,7 @@ public class PlayerAnimationHandler : MonoBehaviour
 
     public void PlayTargetAnimation(string targetAnimation, bool isInteracting)
     {
+        //animator.applyRootMotion = isInteracting;
         animator.SetBool("isInteracting", isInteracting);
         animator.CrossFade(targetAnimation,0.2f);
     }
@@ -75,5 +78,26 @@ public class PlayerAnimationHandler : MonoBehaviour
         animator.SetBool("isJumping", true);
         PlayTargetAnimation("Jumping", false);
     }
+
+    public bool IsInteracting(){
+        if(animator.GetBool("isInteracting") == true){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
     
+    private void OnAnimatorMove(){
+        if(playerMovement.isInteracting == false){
+            return;
+        }
+
+        float delta = Time.deltaTime;
+        playerMovement.GetComponent<Rigidbody>().drag = 0;
+        Vector3 deltaPosition = animator.deltaPosition;
+        deltaPosition.y = 0;
+        Vector3 velocity = deltaPosition / delta;
+        playerMovement.GetComponent<Rigidbody>().velocity = velocity;
+    }
 }

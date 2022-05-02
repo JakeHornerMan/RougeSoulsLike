@@ -38,14 +38,15 @@ public class PlayerManager : MonoBehaviour
 
         //New System (no more tutorial hell!)
         playerMovement.HandlePlayerMovement(inputManager.movementInput);
+        playerMovement.isInteracting = playerAnimationHandler.animator.GetBool("isInteracting");
     }
 
     private void LateUpdate() 
     {
         cameraHandler.HandleAllCameraMovement();
 
-        isInteracting = playerAnimationHandler.animator.GetBool("isInteracting");
-        //playerMovement.isJumping = playerAnimationHandler.animator.GetBool("isJumping");
+        //isInteracting = playerAnimationHandler.animator.GetBool("isInteracting");
+        
         playerAnimationHandler.animator.SetBool("isGrounded", playerMovement.isGrounded);
     }
 }

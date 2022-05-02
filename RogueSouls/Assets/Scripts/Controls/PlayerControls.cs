@@ -175,7 +175,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
             ""id"": ""a461e2c1-9efd-452b-ae13-a1419a2218ba"",
             ""actions"": [
                 {
-                    ""name"": ""B"",
+                    ""name"": ""Run"",
                     ""type"": ""Button"",
                     ""id"": ""4e08dad8-0ea6-47c4-b5f8-01788ec7192c"",
                     ""expectedControlType"": ""Button"",
@@ -189,28 +189,36 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Dodge"",
+                    ""type"": ""Button"",
+                    ""id"": ""3c474250-86dc-4823-b981-943703e964f8"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
                 {
                     ""name"": """",
                     ""id"": ""ea9e2b0f-354d-46a8-802b-b91ac0dda684"",
-                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""path"": ""<Gamepad>/buttonWest"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""B"",
+                    ""action"": ""Run"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
                     ""id"": ""40c182b4-b079-4706-9452-5a03b042de71"",
-                    ""path"": ""<Keyboard>/shift"",
+                    ""path"": ""<Keyboard>/ctrl"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""B"",
+                    ""action"": ""Run"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -235,6 +243,28 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""action"": ""Jump"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""def9aa6a-98c7-47fb-a8c8-fc33e21ab06d"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Dodge"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""13b6db81-5139-4019-8a08-ae9b117d13e2"",
+                    ""path"": ""<Keyboard>/shift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Dodge"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -247,8 +277,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         m_PlayerMovement_Camera = m_PlayerMovement.FindAction("Camera", throwIfNotFound: true);
         // Player Actions
         m_PlayerActions = asset.FindActionMap("Player Actions", throwIfNotFound: true);
-        m_PlayerActions_B = m_PlayerActions.FindAction("B", throwIfNotFound: true);
+        m_PlayerActions_Run = m_PlayerActions.FindAction("Run", throwIfNotFound: true);
         m_PlayerActions_Jump = m_PlayerActions.FindAction("Jump", throwIfNotFound: true);
+        m_PlayerActions_Dodge = m_PlayerActions.FindAction("Dodge", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -339,14 +370,16 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     // Player Actions
     private readonly InputActionMap m_PlayerActions;
     private IPlayerActionsActions m_PlayerActionsActionsCallbackInterface;
-    private readonly InputAction m_PlayerActions_B;
+    private readonly InputAction m_PlayerActions_Run;
     private readonly InputAction m_PlayerActions_Jump;
+    private readonly InputAction m_PlayerActions_Dodge;
     public struct PlayerActionsActions
     {
         private @PlayerControls m_Wrapper;
         public PlayerActionsActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
-        public InputAction @B => m_Wrapper.m_PlayerActions_B;
+        public InputAction @Run => m_Wrapper.m_PlayerActions_Run;
         public InputAction @Jump => m_Wrapper.m_PlayerActions_Jump;
+        public InputAction @Dodge => m_Wrapper.m_PlayerActions_Dodge;
         public InputActionMap Get() { return m_Wrapper.m_PlayerActions; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -356,22 +389,28 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         {
             if (m_Wrapper.m_PlayerActionsActionsCallbackInterface != null)
             {
-                @B.started -= m_Wrapper.m_PlayerActionsActionsCallbackInterface.OnB;
-                @B.performed -= m_Wrapper.m_PlayerActionsActionsCallbackInterface.OnB;
-                @B.canceled -= m_Wrapper.m_PlayerActionsActionsCallbackInterface.OnB;
+                @Run.started -= m_Wrapper.m_PlayerActionsActionsCallbackInterface.OnRun;
+                @Run.performed -= m_Wrapper.m_PlayerActionsActionsCallbackInterface.OnRun;
+                @Run.canceled -= m_Wrapper.m_PlayerActionsActionsCallbackInterface.OnRun;
                 @Jump.started -= m_Wrapper.m_PlayerActionsActionsCallbackInterface.OnJump;
                 @Jump.performed -= m_Wrapper.m_PlayerActionsActionsCallbackInterface.OnJump;
                 @Jump.canceled -= m_Wrapper.m_PlayerActionsActionsCallbackInterface.OnJump;
+                @Dodge.started -= m_Wrapper.m_PlayerActionsActionsCallbackInterface.OnDodge;
+                @Dodge.performed -= m_Wrapper.m_PlayerActionsActionsCallbackInterface.OnDodge;
+                @Dodge.canceled -= m_Wrapper.m_PlayerActionsActionsCallbackInterface.OnDodge;
             }
             m_Wrapper.m_PlayerActionsActionsCallbackInterface = instance;
             if (instance != null)
             {
-                @B.started += instance.OnB;
-                @B.performed += instance.OnB;
-                @B.canceled += instance.OnB;
+                @Run.started += instance.OnRun;
+                @Run.performed += instance.OnRun;
+                @Run.canceled += instance.OnRun;
                 @Jump.started += instance.OnJump;
                 @Jump.performed += instance.OnJump;
                 @Jump.canceled += instance.OnJump;
+                @Dodge.started += instance.OnDodge;
+                @Dodge.performed += instance.OnDodge;
+                @Dodge.canceled += instance.OnDodge;
             }
         }
     }
@@ -383,7 +422,8 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     }
     public interface IPlayerActionsActions
     {
-        void OnB(InputAction.CallbackContext context);
+        void OnRun(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
+        void OnDodge(InputAction.CallbackContext context);
     }
 }

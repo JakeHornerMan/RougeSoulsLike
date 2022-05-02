@@ -3360,8 +3360,9 @@ MonoBehaviour:
   verticalInput: 0
   horizontalInput: 0
   moveAmount: 0
-  b_input: 0
+  run_input: 0
   jump_input: 0
+  dodge_input: 0
 --- !u!136 &4056710954491409510
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -3407,14 +3408,21 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 1
+  isInteracting: 0
+  DissableMove: 0
   isSprinting: 0
   isGrounded: 0
   isJumping: 0
+  isDodging: 0
   walkingSpeed: 2
   movementSpeed: 5
   sprintingSpeed: 8
   rotationSpeed: 10
   gravityIntensity: -5
   jumpHeight: 3
+  rollVelocity: 8
+  stepVelocity: 5
+  delayBeforeInvinsible: 0
+  invincibleDuration: 0
   rayCastHeightOffset: 1.1
   raycastLength: 0.2
