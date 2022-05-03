@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49520813a374b6e4ebf1cb0d48eec966, type: 3}
+  m_Name: Curved_Sword
+  m_EditorClassIdentifier: 
+  itemIcon: {fileID: 0}
+  itemName: Curved Sword
+  modelPrefab: {fileID: 2806789130592800479, guid: 0571ef6d1eeb6dc4fad553ad3a0bcd59, type: 3}
+  isUnarmed: 0

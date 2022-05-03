@@ -56,7 +56,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void HandlePlayerMovement(Vector2 movementInput)
     {
-
+        
         if(!DissableMove){
             if(isGrounded){
                 Rotation(movementInput);
@@ -163,17 +163,23 @@ public class PlayerMovement : MonoBehaviour
         if(isDodging){
 
             if(inputManager.moveAmount > 0){
-                playerAnimationHandler.PlayTargetAnimation("Dodge Roll", true);
-                
-                WaitForMove(0.2f, rollVelocity, true);
+                Rolling();
             }
             else{
-                playerAnimationHandler.PlayTargetAnimation("Dodge Step", true);
-
-                WaitForMove(0.2f, stepVelocity, false);
+                BackStep();
             }
         }
         isDodging = false;
+    }
+
+    public void Rolling(){
+        playerAnimationHandler.PlayTargetAnimation("Dodge Roll", true);
+        WaitForMove(0.2f, rollVelocity, true);
+    }
+
+    public void BackStep(){
+        playerAnimationHandler.PlayTargetAnimation("Dodge Step", true);
+        WaitForMove(0.2f, stepVelocity, false);
     }
 
     void OnCollisionEnter(Collision collision)
@@ -218,11 +224,11 @@ public class PlayerMovement : MonoBehaviour
         StartCoroutine(coroutine);
     }
 
-    private IEnumerator WaitThenMove(float time, int moveVelocity, bool forwards){
+    private IEnumerator WaitThenMove(float time, int moveVelocity, bool roll){
         yield return new WaitForSeconds(time);
 
         Vector3 playerVelocity;
-        if(forwards == true){
+        if(roll == true){
             playerVelocity = (transform.forward * moveVelocity);
         }
         else{
