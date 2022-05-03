@@ -6,5 +6,8 @@ using UnityEngine;
 public class WeaponItem : Item
 {
     public GameObject modelPrefab;
+    public int damage;
+    public int staminaCost;
+    public int ManaCost;
     public bool isUnarmed;
 }
