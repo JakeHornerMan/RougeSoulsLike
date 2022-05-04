@@ -14,5 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemIcon: {fileID: 0}
   itemName: Curved Sword
-  modelPrefab: {fileID: 2806789130592800479, guid: 0571ef6d1eeb6dc4fad553ad3a0bcd59, type: 3}
+  modelPrefab: {fileID: 4422721009538036497, guid: 0571ef6d1eeb6dc4fad553ad3a0bcd59, type: 3}
+  damage: 0
+  staminaCost: 0
+  ManaCost: 0
   isUnarmed: 0
