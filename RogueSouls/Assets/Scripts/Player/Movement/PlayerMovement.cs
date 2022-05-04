@@ -157,12 +157,21 @@ public class PlayerMovement : MonoBehaviour
 
     public void RollingAndBackstep(Vector2 movementInput){
         if(isInteracting){
+            isDodging = false;
             return;
         }
 
         if(isDodging){
 
             if(inputManager.moveAmount > 0){
+
+                Vector2 input = new Vector2(movementInput.x, movementInput.y);
+                Vector2 inputDirirection = input.normalized;
+
+                float targetAngle = Mathf.Atan2(inputDirirection.x, inputDirirection.y) * Mathf.Rad2Deg + cameraTransform.eulerAngles.y;
+                Quaternion rotate = Quaternion.Euler(0, targetAngle, 0);
+                gameObject.transform.rotation = rotate;
+
                 Rolling();
             }
             else{
