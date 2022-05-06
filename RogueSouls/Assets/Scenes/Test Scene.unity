@@ -4873,7 +4873,6 @@ MonoBehaviour:
   DissableMove: 0
   isSprinting: 0
   isGrounded: 0
-  isInAir: 0
   isJumping: 0
   isDodging: 0
   walkingSpeed: 2
