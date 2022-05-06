@@ -18,7 +18,8 @@ public class PlayerMovement : MonoBehaviour
     public bool DissableMove = false;
     public bool isSprinting;
     public bool isGrounded;
-    public bool isJumping;
+    public bool isInAir;
+    public bool isJumping = false;
     public bool isDodging;
 
     [Header("Movement Stats")]
@@ -45,7 +46,6 @@ public class PlayerMovement : MonoBehaviour
     public float rayCastHeightOffset = 0.25f;
     public float raycastLength = 0.15f;
 
-    // Start is called before the first frame update
     void Start()
     {
         inputManager = GetComponent<InputManager>();
@@ -65,7 +65,7 @@ public class PlayerMovement : MonoBehaviour
             }
         }
 
-        // if(!isGrounded && !isJumping){
+        // if(!isGrounded && !isJumping && isInAir){
         //     Falling();
         // }   
     }
@@ -77,7 +77,7 @@ public class PlayerMovement : MonoBehaviour
         Vector2 input = new Vector2(movementInput.x, movementInput.y);
         Vector2 inputDirirection = input.normalized;
 
-        if(isJumping){return;}
+        if(isInAir){return;}
 
         moveDirection = cameraTransform.forward * inputDirirection.y;
         moveDirection = moveDirection + cameraTransform.right * inputDirirection.x;
@@ -108,7 +108,7 @@ public class PlayerMovement : MonoBehaviour
         Vector2 input = new Vector2(movementInput.x, movementInput.y);
         Vector2 inputDirirection = input.normalized;
 
-        if(isJumping){return;}
+        if(isInAir){return;}
 
         float targetAngle = Mathf.Atan2(inputDirirection.x, inputDirirection.y) * Mathf.Rad2Deg + cameraTransform.eulerAngles.y;
         Quaternion rotate = Quaternion.Euler(0, targetAngle, 0);
@@ -147,16 +147,22 @@ public class PlayerMovement : MonoBehaviour
     //     playerRigidbody.velocity = movementVelocity;
     // }
 
-    // public void Falling(){
-    //     if(playerRigidbody.velocity.y<0){
-    //         isJumping = true;
-    //         playerAnimationHandler.PlayTargetAnimation("Falling", false);
-    //         playerRigidbody.velocity += Vector3.up * (5.0f - 1) * Time.deltaTime;
-    //     }
-    // }
+    public void Falling(){
+        if(playerRigidbody.velocity.y<0){
+            coroutine = WaitForFalling(.5f);
+            StartCoroutine(coroutine);
+        }
+    }
+
+    private IEnumerator WaitForFalling(float waitTime){
+        yield return new WaitForSeconds(waitTime);
+        if(isInAir){
+            playerAnimationHandler.PlayTargetAnimation("Falling", false);
+        }
+    }
 
     public void RollingAndBackstep(Vector2 movementInput){
-        if(isInteracting){
+        if(isInteracting || isInAir){
             isDodging = false;
             return;
         }
@@ -196,6 +202,7 @@ public class PlayerMovement : MonoBehaviour
         if (collision.gameObject.layer == 0)
         {
             isGrounded = true;
+            isInAir = false;
             isJumping = false;
             DisableMovement(.5f);
         }
@@ -205,6 +212,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (collision.gameObject.layer == 0)
         {
+            isInAir = true;
             isGrounded = false;
         }
     }
