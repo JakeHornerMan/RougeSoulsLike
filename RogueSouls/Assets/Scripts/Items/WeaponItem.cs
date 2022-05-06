@@ -10,4 +10,8 @@ public class WeaponItem : Item
     public int staminaCost;
     public int ManaCost;
     public bool isUnarmed;
+
+    [Header("Attack Animations")]
+    public string lightAttack;
+    public string heavyAttack;
 }
