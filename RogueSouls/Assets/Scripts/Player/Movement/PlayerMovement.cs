@@ -41,6 +41,12 @@ public class PlayerMovement : MonoBehaviour
     public float delayBeforeInvinsible;
     public float invincibleDuration;
 
+    [Header("Steps & Slopes")]
+    [SerializeField] GameObject stepRayLower;
+    [SerializeField] GameObject stepRayUpper;
+    [SerializeField] float stepHeight = 0.4f;
+    [SerializeField] float stepSmooth = 0.1f;
+
     [Header("Gizmo Debug")]
     public float rayCastHeightOffset = 0.25f;
     public float raycastLength = 0.15f;
@@ -52,11 +58,13 @@ public class PlayerMovement : MonoBehaviour
         playerAnimationHandler= GetComponent<PlayerAnimationHandler>();
         playerRigidbody = GetComponent<Rigidbody>();
         cameraTransform = Camera.main.transform;
+
     }
 
     public void HandlePlayerMovement(Vector2 movementInput)
     {
-        
+        //StepClimbing();
+
         if(!DissableMove){
             if(isGrounded){
                 Rotation(movementInput);
@@ -99,6 +107,8 @@ public class PlayerMovement : MonoBehaviour
         
         Vector3 movementVelocity = moveDirection;
         playerRigidbody.velocity = movementVelocity;
+
+        StepClimbing();
     }
 
     public void Rotation(Vector2 movementInput){
@@ -191,13 +201,48 @@ public class PlayerMovement : MonoBehaviour
         WaitForMove(0.2f, stepVelocity, false);
     }
 
+    public void StepClimbing(){
+        RaycastHit hitlower;
+        if(Physics.Raycast
+            (stepRayLower.transform.position, transform.TransformDirection(Vector3.forward), out hitlower, 0.1f)){
+            
+            RaycastHit hitupper;
+            if(!Physics.Raycast
+                (stepRayUpper.transform.position, transform.TransformDirection(Vector3.forward), out hitupper, 0.2f)){
+                playerRigidbody.position -= new Vector3(0f, - stepSmooth, 0f); 
+            }
+        }
+
+        RaycastHit hitlower45;
+        if(Physics.Raycast
+            (stepRayLower.transform.position, transform.TransformDirection(1.5f,0,1), out hitlower45, 0.1f)){
+            
+            RaycastHit hitupper45;
+            if(!Physics.Raycast
+                (stepRayUpper.transform.position, transform.TransformDirection(1.5f,0,1), out hitupper45, 0.2f)){
+                playerRigidbody.position -= new Vector3(0f, - stepSmooth, 0f); 
+            }
+        }
+
+        RaycastHit hitlowerMinus45;
+        if(Physics.Raycast
+            (stepRayLower.transform.position, transform.TransformDirection(-1.5f,0,1), out hitlowerMinus45, 0.1f)){
+            
+            RaycastHit hitupperMinus45;
+            if(!Physics.Raycast
+                (stepRayUpper.transform.position, transform.TransformDirection(-1.5f,0,1), out hitupperMinus45, 0.2f)){
+                playerRigidbody.position -= new Vector3(0f, - stepSmooth, 0f); 
+            }
+        }
+    }
+
     void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.layer == 0)
         {
             isGrounded = true;
             isJumping = false;
-            DisableMovement(.5f);
+            //DisableMovement(.5f);
         }
     }
 
@@ -207,14 +252,6 @@ public class PlayerMovement : MonoBehaviour
         {
             isGrounded = false;
         }
-    }
-
-    void OnDrawGizmosSelected()
-    {
-        Vector3 rayCastOrigin = transform.position; 
-        rayCastOrigin.y = rayCastOrigin.y + rayCastHeightOffset;
-        Gizmos.color = Color.blue;
-        Gizmos.DrawSphere(rayCastOrigin, raycastLength);
     }
 
     public void DisableMovement(float time){
@@ -245,5 +282,13 @@ public class PlayerMovement : MonoBehaviour
         }
         
         playerRigidbody.velocity = playerVelocity;
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        Vector3 rayCastOrigin = transform.position; 
+        rayCastOrigin.y = rayCastOrigin.y + rayCastHeightOffset;
+        Gizmos.color = Color.blue;
+        Gizmos.DrawSphere(rayCastOrigin, raycastLength);
     }
 }
