@@ -39,28 +39,28 @@ public class CameraHandler : MonoBehaviour
         inputManager = FindObjectOfType<InputManager>();
     }
 
-    public void HandleAllCameraMovement(float delta)
+    public void HandleAllCameraMovement()
     {
-        FollowTarget(delta);
-        RotateCamera(delta);
-        HandleCameraCollisions(delta);
+        FollowTarget();
+        RotateCamera();
+        HandleCameraCollisions();
     }
 
-    private void FollowTarget(float delta)
+    private void FollowTarget()
     {
         Vector3 targetPosition = Vector3.SmoothDamp
-            (transform.position, playerTransform.position, ref cameraFollowVelocity, delta / cameraFollowSpeed);
+            (transform.position, playerTransform.position, ref cameraFollowVelocity, cameraFollowSpeed);
 
         transform.position = targetPosition;
     }
 
-    private void RotateCamera(float delta)
+    private void RotateCamera()
     {
         Vector3 rotation;
         Quaternion targetRotation;
 
-        lookAngle = lookAngle + (inputManager.cameraInputX * cameraLookSpeed) / delta;
-        pivotAngle = pivotAngle + (inputManager.cameraInputY * cameraPivotSpeed) / delta;
+        lookAngle = lookAngle + (inputManager.cameraInputX * cameraLookSpeed);
+        pivotAngle = pivotAngle + (inputManager.cameraInputY * cameraPivotSpeed);
         pivotAngle = Mathf.Clamp(pivotAngle, minimumPivot, maximumPivot);
 
         rotation = Vector3.zero; 
@@ -74,7 +74,7 @@ public class CameraHandler : MonoBehaviour
         cameraPivotTransform.localRotation = targetRotation;
     }
 
-    private void HandleCameraCollisions(float delta)
+    private void HandleCameraCollisions()
     {
         targetPosition = defaultPosition;
         RaycastHit hit;
@@ -93,7 +93,7 @@ public class CameraHandler : MonoBehaviour
             targetPosition = targetPosition -minimumCollisionOffset;
         }
 
-        cameraVectorPosition.z = Mathf.Lerp(cameraTransform.localPosition.z, targetPosition, delta/0.2f);
+        cameraVectorPosition.z = Mathf.Lerp(cameraTransform.localPosition.z, targetPosition, 0.2f);
         cameraTransform.localPosition = cameraVectorPosition;
 
     }

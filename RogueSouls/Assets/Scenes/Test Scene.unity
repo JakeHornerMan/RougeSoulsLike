@@ -480,11 +480,11 @@ MonoBehaviour:
   minimumCollisionOffset: 0.2
   cameraCollisionRadius: 0.2
   cameraFollowSpeed: 0.2
-  cameraLookSpeed: 0.01
-  cameraPivotSpeed: 0.01
+  cameraLookSpeed: 0.3
+  cameraPivotSpeed: 0.3
   minimumPivot: -35
   maximumPivot: 35
-  cameraSphereRadius: 0.5
+  cameraSphereRadius: 0.2
 --- !u!4 &257626203
 Transform:
   m_ObjectHideFlags: 0

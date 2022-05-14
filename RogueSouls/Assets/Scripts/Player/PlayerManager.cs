@@ -44,7 +44,7 @@ public class PlayerManager : MonoBehaviour
 
     private void LateUpdate() 
     {
-        cameraHandler.HandleAllCameraMovement(delta);
+        cameraHandler.HandleAllCameraMovement();
 
         //isInteracting = playerAnimationHandler.animator.GetBool("isInteracting");
         
