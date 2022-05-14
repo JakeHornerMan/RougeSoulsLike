@@ -34,6 +34,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("Jump Stats")]
     public float gravityIntensity = -15;
     public float jumpHeight = 3;
+    public float distanceToGround =1f;
 
     [Header("Dodge Stats")]
     public int rollVelocity = 7;
@@ -44,7 +45,6 @@ public class PlayerMovement : MonoBehaviour
     [Header("Steps & Slopes")]
     [SerializeField] GameObject stepRayLower;
     [SerializeField] GameObject stepRayUpper;
-    [SerializeField] float stepHeight = 0.4f;
     [SerializeField] float stepSmooth = 0.1f;
 
     [Header("Gizmo Debug")]
@@ -63,7 +63,8 @@ public class PlayerMovement : MonoBehaviour
 
     public void HandlePlayerMovement(Vector2 movementInput)
     {
-        //StepClimbing();
+        //IsGrounded();
+        StepClimbing();
 
         if(!DissableMove){
             if(isGrounded){
@@ -108,7 +109,7 @@ public class PlayerMovement : MonoBehaviour
         Vector3 movementVelocity = moveDirection;
         playerRigidbody.velocity = movementVelocity;
 
-        StepClimbing();
+        //StepClimbing();
     }
 
     public void Rotation(Vector2 movementInput){
@@ -129,6 +130,8 @@ public class PlayerMovement : MonoBehaviour
     }
 
     public void Jump() {
+        if(!isGrounded){return;}
+
         isJumping = true;
 
         float jumpingVelocity = Mathf.Sqrt(-2 * gravityIntensity * jumpHeight);
@@ -166,7 +169,8 @@ public class PlayerMovement : MonoBehaviour
     // }
 
     public void RollingAndBackstep(Vector2 movementInput){
-        if(isInteracting){
+        
+        if(isInteracting || isJumping){
             isDodging = false;
             return;
         }
@@ -210,6 +214,7 @@ public class PlayerMovement : MonoBehaviour
             if(!Physics.Raycast
                 (stepRayUpper.transform.position, transform.TransformDirection(Vector3.forward), out hitupper, 0.2f)){
                 playerRigidbody.position -= new Vector3(0f, - stepSmooth, 0f); 
+                //playerRigidbody.velocity = new Vector3(0f,  stepSmooth, 0f);
             }
         }
 
@@ -220,7 +225,8 @@ public class PlayerMovement : MonoBehaviour
             RaycastHit hitupper45;
             if(!Physics.Raycast
                 (stepRayUpper.transform.position, transform.TransformDirection(1.5f,0,1), out hitupper45, 0.2f)){
-                playerRigidbody.position -= new Vector3(0f, - stepSmooth, 0f); 
+                playerRigidbody.position -= new Vector3(0f, - stepSmooth, 0f);
+                //playerRigidbody.velocity = new Vector3(0f,  stepSmooth, 0f); 
             }
         }
 
@@ -231,7 +237,8 @@ public class PlayerMovement : MonoBehaviour
             RaycastHit hitupperMinus45;
             if(!Physics.Raycast
                 (stepRayUpper.transform.position, transform.TransformDirection(-1.5f,0,1), out hitupperMinus45, 0.2f)){
-                playerRigidbody.position -= new Vector3(0f, - stepSmooth, 0f); 
+                playerRigidbody.position -= new Vector3(0f, - stepSmooth, 0f);
+                //playerRigidbody.velocity = new Vector3(0f,  stepSmooth, 0f);
             }
         }
     }
@@ -253,6 +260,27 @@ public class PlayerMovement : MonoBehaviour
             isGrounded = false;
         }
     }
+
+    // public void IsGrounded(){
+    //     RaycastHit hit;
+    //     if(Physics.Raycast(transform.position, Vector3.down, out hit, distanceToGround)){
+    //         isGrounded = true;
+    //     }
+    //     else{
+    //         isGrounded = false;
+    //         isJumping = false;
+    //     }
+
+    //     // RaycastHit hit;
+    //     // Physics.BoxCast(transform.position, transform.localScale, -transform.up, out hit, transform.rotation, distanceToGround);
+    //     // if(hit.transform.gameObject.layer = LayerMask.NameToLayer("default")){
+    //     //     isGrounded = true;
+    //     //     isJumping = false;
+    //     // }
+    //     // else{
+    //     //     isGrounded = false;
+    //     // }
+    // }
 
     public void DisableMovement(float time){
         coroutine = WaitForMovement(time);
@@ -286,9 +314,12 @@ public class PlayerMovement : MonoBehaviour
 
     void OnDrawGizmosSelected()
     {
-        Vector3 rayCastOrigin = transform.position; 
-        rayCastOrigin.y = rayCastOrigin.y + rayCastHeightOffset;
+        
+        // Vector3 rayCastOrigin = transform.position; 
+        // rayCastOrigin.y = rayCastOrigin.y + rayCastHeightOffset;
         Gizmos.color = Color.blue;
-        Gizmos.DrawSphere(rayCastOrigin, raycastLength);
+        // Gizmos.DrawSphere(rayCastOrigin, raycastLength);
+
+        Gizmos.DrawWireCube(transform.position + -transform.up * distanceToGround, transform.localScale);
     }
 }
