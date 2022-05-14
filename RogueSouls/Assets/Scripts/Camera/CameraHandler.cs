@@ -39,28 +39,28 @@ public class CameraHandler : MonoBehaviour
         inputManager = FindObjectOfType<InputManager>();
     }
 
-    public void HandleAllCameraMovement()
+    public void HandleAllCameraMovement(float delta)
     {
-        FollowTarget();
-        RotateCamera();
-        HandleCameraCollisions();
+        FollowTarget(delta);
+        RotateCamera(delta);
+        HandleCameraCollisions(delta);
     }
 
-    private void FollowTarget()
+    private void FollowTarget(float delta)
     {
         Vector3 targetPosition = Vector3.SmoothDamp
-            (transform.position, playerTransform.position, ref cameraFollowVelocity, cameraFollowSpeed);
+            (transform.position, playerTransform.position, ref cameraFollowVelocity, delta / cameraFollowSpeed);
 
         transform.position = targetPosition;
     }
 
-    private void RotateCamera()
+    private void RotateCamera(float delta)
     {
         Vector3 rotation;
         Quaternion targetRotation;
 
-        lookAngle = lookAngle + (inputManager.cameraInputX * cameraLookSpeed);
-        pivotAngle = pivotAngle + (inputManager.cameraInputY * cameraPivotSpeed);
+        lookAngle = lookAngle + (inputManager.cameraInputX * cameraLookSpeed) / delta;
+        pivotAngle = pivotAngle + (inputManager.cameraInputY * cameraPivotSpeed) / delta;
         pivotAngle = Mathf.Clamp(pivotAngle, minimumPivot, maximumPivot);
 
         rotation = Vector3.zero; 
@@ -74,7 +74,7 @@ public class CameraHandler : MonoBehaviour
         cameraPivotTransform.localRotation = targetRotation;
     }
 
-    private void HandleCameraCollisions()
+    private void HandleCameraCollisions(float delta)
     {
         targetPosition = defaultPosition;
         RaycastHit hit;
@@ -93,7 +93,7 @@ public class CameraHandler : MonoBehaviour
             targetPosition = targetPosition -minimumCollisionOffset;
         }
 
-        cameraVectorPosition.z = Mathf.Lerp(cameraTransform.localPosition.z, targetPosition, 0.2f);
+        cameraVectorPosition.z = Mathf.Lerp(cameraTransform.localPosition.z, targetPosition, delta/0.2f);
         cameraTransform.localPosition = cameraVectorPosition;
 
     }
