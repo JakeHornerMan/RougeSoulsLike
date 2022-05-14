@@ -19,5 +19,3 @@ MonoBehaviour:
   staminaCost: 0
   ManaCost: 0
   isUnarmed: 0
-  lightAttack: LightAttack
-  heavyAttack: HeavyAttack

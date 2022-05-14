@@ -5,10 +5,8 @@ using UnityEngine;
 public class InputManager : MonoBehaviour
 {
     PlayerControls playerControls;
-    //PlayerLocomotion playerLocomotion;
+    PlayerLocomotion playerLocomotion;
     PlayerMovement playerMovement;
-    PlayerInventory playerInventory;
-
     PlayerAnimationHandler playerAnimationHandler;
     public Vector2 movementInput;
     public Vector2 cameraInput;
@@ -23,14 +21,11 @@ public class InputManager : MonoBehaviour
     public bool run_input;
     public bool jump_input;
     public bool dodge_input;
-    public bool r_lightAttack;
-    public bool r_heavyAttack;
 
     private void Awake(){
         playerAnimationHandler = GetComponent<PlayerAnimationHandler>();
         playerMovement = GetComponent<PlayerMovement>();
-        //playerLocomotion = GetComponent<PlayerLocomotion>();
-        playerInventory = GetComponent<PlayerInventory>();
+        playerLocomotion = GetComponent<PlayerLocomotion>();
     }
 
     public void HandleAllInputs()
@@ -39,7 +34,6 @@ public class InputManager : MonoBehaviour
         HandleSprintingInput();
         HandleJumpingInput();
         HandleRollingInput();
-        HandleAttackInput();
     }
 
     private void OnEnable()
@@ -56,9 +50,7 @@ public class InputManager : MonoBehaviour
             playerControls.PlayerActions.Jump.performed += i => jump_input = true;
 
             playerControls.PlayerActions.Dodge.performed += i => dodge_input = true;
-            
-            playerControls.Combat.RightLightAttack.performed += i => r_lightAttack = true;
-            playerControls.Combat.RightHeavyAttack.performed += i => r_heavyAttack = true;
+            //playerControls.PlayerActions.Dodge.canceled += i => dodge_input = false;
         }
 
         playerControls.Enable();
@@ -108,17 +100,8 @@ public class InputManager : MonoBehaviour
             playerMovement.isDodging = true;
             dodge_input = false;
         }
-    }
-
-    private void HandleAttackInput(){
-        if(r_lightAttack){
-            playerInventory.Right_lightAttack();
-            r_lightAttack = false;
-        }
-
-        if(r_heavyAttack){
-            playerInventory.Right_heavyAttack();
-            r_heavyAttack = false;
-        }
+        // else{
+        //     playerMovement.isDodging = false;
+        // }
     }
 }

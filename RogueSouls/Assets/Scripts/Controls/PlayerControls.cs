@@ -267,74 +267,6 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
-        },
-        {
-            ""name"": ""Combat"",
-            ""id"": ""8d32dc48-8819-4c1c-b6b9-927f9fba3ee4"",
-            ""actions"": [
-                {
-                    ""name"": ""RightLightAttack"",
-                    ""type"": ""Button"",
-                    ""id"": ""1e466af9-9398-4cce-831d-233c2d406df7"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """"
-                },
-                {
-                    ""name"": ""RightHeavyAttack"",
-                    ""type"": ""Button"",
-                    ""id"": ""1c2ab731-5763-4f7c-82fb-cb03040531a4"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """"
-                }
-            ],
-            ""bindings"": [
-                {
-                    ""name"": """",
-                    ""id"": ""3411dae7-e765-4307-8829-97bf4d0af297"",
-                    ""path"": ""<Gamepad>/rightShoulder"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""RightLightAttack"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""4ba56b30-7820-4e25-bfbd-cd375f27770f"",
-                    ""path"": ""<Mouse>/press"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""RightLightAttack"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""a57e53f9-2703-4933-98e4-ee7a2d85a879"",
-                    ""path"": ""<Gamepad>/rightTrigger"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""RightHeavyAttack"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""824913b0-6781-4172-a44b-ffe6db45221a"",
-                    ""path"": ""<Mouse>/forwardButton"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""RightHeavyAttack"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                }
-            ]
         }
     ],
     ""controlSchemes"": []
@@ -348,10 +280,6 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         m_PlayerActions_Run = m_PlayerActions.FindAction("Run", throwIfNotFound: true);
         m_PlayerActions_Jump = m_PlayerActions.FindAction("Jump", throwIfNotFound: true);
         m_PlayerActions_Dodge = m_PlayerActions.FindAction("Dodge", throwIfNotFound: true);
-        // Combat
-        m_Combat = asset.FindActionMap("Combat", throwIfNotFound: true);
-        m_Combat_RightLightAttack = m_Combat.FindAction("RightLightAttack", throwIfNotFound: true);
-        m_Combat_RightHeavyAttack = m_Combat.FindAction("RightHeavyAttack", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -487,47 +415,6 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         }
     }
     public PlayerActionsActions @PlayerActions => new PlayerActionsActions(this);
-
-    // Combat
-    private readonly InputActionMap m_Combat;
-    private ICombatActions m_CombatActionsCallbackInterface;
-    private readonly InputAction m_Combat_RightLightAttack;
-    private readonly InputAction m_Combat_RightHeavyAttack;
-    public struct CombatActions
-    {
-        private @PlayerControls m_Wrapper;
-        public CombatActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
-        public InputAction @RightLightAttack => m_Wrapper.m_Combat_RightLightAttack;
-        public InputAction @RightHeavyAttack => m_Wrapper.m_Combat_RightHeavyAttack;
-        public InputActionMap Get() { return m_Wrapper.m_Combat; }
-        public void Enable() { Get().Enable(); }
-        public void Disable() { Get().Disable(); }
-        public bool enabled => Get().enabled;
-        public static implicit operator InputActionMap(CombatActions set) { return set.Get(); }
-        public void SetCallbacks(ICombatActions instance)
-        {
-            if (m_Wrapper.m_CombatActionsCallbackInterface != null)
-            {
-                @RightLightAttack.started -= m_Wrapper.m_CombatActionsCallbackInterface.OnRightLightAttack;
-                @RightLightAttack.performed -= m_Wrapper.m_CombatActionsCallbackInterface.OnRightLightAttack;
-                @RightLightAttack.canceled -= m_Wrapper.m_CombatActionsCallbackInterface.OnRightLightAttack;
-                @RightHeavyAttack.started -= m_Wrapper.m_CombatActionsCallbackInterface.OnRightHeavyAttack;
-                @RightHeavyAttack.performed -= m_Wrapper.m_CombatActionsCallbackInterface.OnRightHeavyAttack;
-                @RightHeavyAttack.canceled -= m_Wrapper.m_CombatActionsCallbackInterface.OnRightHeavyAttack;
-            }
-            m_Wrapper.m_CombatActionsCallbackInterface = instance;
-            if (instance != null)
-            {
-                @RightLightAttack.started += instance.OnRightLightAttack;
-                @RightLightAttack.performed += instance.OnRightLightAttack;
-                @RightLightAttack.canceled += instance.OnRightLightAttack;
-                @RightHeavyAttack.started += instance.OnRightHeavyAttack;
-                @RightHeavyAttack.performed += instance.OnRightHeavyAttack;
-                @RightHeavyAttack.canceled += instance.OnRightHeavyAttack;
-            }
-        }
-    }
-    public CombatActions @Combat => new CombatActions(this);
     public interface IPlayerMovementActions
     {
         void OnMovement(InputAction.CallbackContext context);
@@ -538,10 +425,5 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         void OnRun(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnDodge(InputAction.CallbackContext context);
-    }
-    public interface ICombatActions
-    {
-        void OnRightLightAttack(InputAction.CallbackContext context);
-        void OnRightHeavyAttack(InputAction.CallbackContext context);
     }
 }
